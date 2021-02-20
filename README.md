@@ -27,20 +27,24 @@ struct ifreq {
 the user specifies which device to affect by setting ifr_name to the name of the interface.  All other members of the structure may share memory.      
 
 we try to open the indicated interface and put it in the file descriptor "fd".
-
+```
 size_t IFNAMSIZ:
+```
 This constant defines the maximum buffer size needed to hold an interface name, including its terminating zero byte.
 
 in these two lines we create a tunneling device:(more precisely we try)
+```
 ifr.ifr_flags = IFF_TUN | IFF_NO_PI;
 ioctl(fd, TUNSETIFF, (void *) &ifr))
+```
 
 
 
 in the main function we use timeval which is a structure defined in  <sys/time.h> header with at least the following members:
-
+```
 time_t         tv_sec      seconds
 suseconds_t    tv_usec     microseconds
+```
 
 
 fd_set datatype : The fd_set data type represents file descriptor sets for the select function.
@@ -49,15 +53,18 @@ fd_set datatype : The fd_set data type represents file descriptor sets for the s
 select() allows a program to monitor multiple file descriptors, waiting until one or more of the file descriptors become "ready" for some class of I/O operation. A file descriptor is considered ready if it is possible to perform the corresponding I/O operation (e.g.read) without blocking.
 
 arguments of this function are : 
+```
 int select(int nfds, fd_set *readfds, fd_set *writefds,fd_set *exceptfds, struct timeval *timeout);
 int nfds :????????????????????????? 
 fd_set *readfds : 
 fd_set *writefds :
 fd_set *exceptfds : ?????????????
+```
 
 Four macros are provided to manipulate the sets. FD_ZERO() clears a set. FD_SET() and FD_CLR() respectively add and remove a given file descriptor from a set. FD_ISSET() tests to see if a file descriptor is part of the set; this is useful after select() returns.
 
 an example of the above functions (https://linux.die.net/man/3/fd_set) is :
+```
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -91,6 +98,7 @@ int main(void)
 
    exit(EXIT_SUCCESS);
 }
+```
 
 
            
