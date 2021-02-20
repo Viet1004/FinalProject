@@ -1,7 +1,10 @@
 # FinalProject
 
 the file should run with root permission
+
 we use following structures : 
+
+
 struct ifreq {
                char ifr_name[IFNAMSIZ]; /* Interface name */
                union {
