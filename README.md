@@ -4,7 +4,7 @@ the file should run with root permission
 
 we use following structures : 
 
-
+```
 struct ifreq {
                char ifr_name[IFNAMSIZ]; /* Interface name */
                union {
@@ -23,6 +23,7 @@ struct ifreq {
                    char           *ifr_data;
                };
            };
+```
 the user specifies which device to affect by setting ifr_name to the name of the interface.  All other members of the structure may share memory.      
 
 we try to open the indicated interface and put it in the file descriptor "fd".
