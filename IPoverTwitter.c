@@ -15,7 +15,16 @@
 #include <linux/if_tun.h>
 #define LENBUF 1024
 
-int tun_alloc() {
+static void run(char *cmd) {
+  printf("Execute `%s`\n", cmd);
+  if (system(cmd)) {
+    perror(cmd);
+    exit(1);
+  }
+}
+
+
+int tun_alloc(char *dev, int flags) {
 
   struct ifreq ifr;
   int fd, err;
@@ -29,25 +38,24 @@ int tun_alloc() {
    */
 
    /* open the clone device */
-    if( (fd = open(clonedev, O_RDWR)) < 0 ) {
+   if( (fd = open(clonedev, O_RDWR)) < 0 ) {
      return fd;
-    }
+   }
 
    /* preparation of the struct ifr, of type "struct ifreq" */
-    memset(&ifr, 0, sizeof(ifr));
+   memset(&ifr, 0, sizeof(ifr));
 
-    ifr.ifr_flags = IFF_TUN | IFF_NO_PI;   /* IFF_TUN or IFF_TAP, plus maybe IFF_NO_PI */
+   ifr.ifr_flags = flags;   /* IFF_TUN or IFF_TAP, plus maybe IFF_NO_PI */
 
-//   if (*dev) {
+   if (*dev) {
      /* if a device name was specified, put it in the structure; otherwise,
       * the kernel will try to allocate the "next" device of the
       * specified type */
-    strncpy(ifr.ifr_name, "tun0", IFNAMSIZ);
-//   }
+     strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+   }
 
    /* try to create the device */
    if( (err = ioctl(fd, TUNSETIFF, (void *) &ifr)) < 0 ) {
-     perror("ioctl[TUNSETIFF]");
      close(fd);
      return err;
    }
@@ -56,7 +64,7 @@ int tun_alloc() {
    * interface to the variable "dev", so the caller can know
    * it. Note that the caller MUST reserve space in *dev (see calling
    * code below) */
-//  strcpy(dev, ifr.ifr_name);
+  strcpy(dev, ifr.ifr_name);
 
   /* this is the special file descriptor that the caller will use to talk
    * with the virtual interface */
@@ -71,11 +79,10 @@ int tun_allocAlt() {
     perror("Cannot open /dev/net/tun");
     return fd;
   }
-
   memset(&ifr, 0, sizeof(ifr));
 
   ifr.ifr_flags = IFF_TUN | IFF_NO_PI;
-  strncpy(ifr.ifr_name, "tun0", IFNAMSIZ);
+  strncpy(ifr.ifr_name, "tun1", IFNAMSIZ);
 
   if ((e = ioctl(fd, TUNSETIFF, (void *) &ifr)) < 0) {
     perror("ioctl[TUNSETIFF]");
@@ -88,17 +95,27 @@ int tun_allocAlt() {
 
 
 int main(){
+/*
   struct timeval tv;
   memset(&tv,0,sizeof(struct timeval));
   tv.tv_sec = 1;
   tv.tv_usec = 10;
-  char tun_buf[LENBUF];
+*/
+  unsigned char tun_buf[LENBUF];
+//  unsigned char buff[LENBUF];
   bzero(tun_buf,LENBUF);
   int tun_fd;
   if ((tun_fd = tun_allocAlt())<0){
     perror("Error at tun allocation");
     exit(EXIT_FAILURE);
   }
+  FILE *write_ptr;
+  write_ptr = fopen("test.bin","wb");
+/*  
+  run("sudo openvpn --mktun --dev tun5");
+  run("sudo ip link set tun5 up");
+  run("sudo ip addr add 10.0.0.1/24 dev tun5");
+*/
   while(1){
 //    printf("Hello\n");
 //    printf("half way!\n");
@@ -106,28 +123,35 @@ int main(){
     FD_ZERO(&readset);
     FD_SET(tun_fd, &readset);
 
-    printf("I'm pissed\n");
+//    printf("I'm pissed\n");
 
-    if(select(tun_fd+10,&readset, NULL, NULL, NULL) == -1){
+    if(select(tun_fd+1,&readset, NULL, NULL, NULL) == -1){
       perror("select error");
       exit(EXIT_FAILURE);
     }
 
+
     int r;
+    unsigned char *temp;
     if (FD_ISSET(tun_fd, &readset)) {
-      printf("In FD_ISSET");
+//      printf("In FD_ISSET");
       r = read(tun_fd, tun_buf, LENBUF);
+      
       if (r < 0) {
         // TODO: ignore some errno
         perror("read from tun_fd error");
         break;
       }
+      temp = malloc((size_t)r);
+      strncpy(temp,tun_buf,(size_t)r);
+      printf("There are %d bytes in the packets\n", r);
+      fwrite(temp,sizeof(temp),1,write_ptr);  
     }
     else{
       printf("If fails");
     }
-    printf("%s\n", tun_buf);
-    printf("End\n");
+    free(temp);
+    
   }
 }
 
