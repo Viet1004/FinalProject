@@ -109,32 +109,27 @@ int main(){
     perror("Error at tun allocation");
     exit(EXIT_FAILURE);
   }
-  FILE *write_ptr;
-  write_ptr = fopen("test.bin","wb");
+
+//  write_ptr = fopen("test.bin","wb");
 /*  
   run("sudo openvpn --mktun --dev tun5");
   run("sudo ip link set tun5 up");
   run("sudo ip addr add 10.0.0.1/24 dev tun5");
 */
   while(1){
-//    printf("Hello\n");
-//    printf("half way!\n");
+    FILE *write_ptr;
+    write_ptr = fopen("test.bin","wb");
     fd_set readset;
     FD_ZERO(&readset);
     FD_SET(tun_fd, &readset);
-
-//    printf("I'm pissed\n");
 
     if(select(tun_fd+1,&readset, NULL, NULL, NULL) == -1){
       perror("select error");
       exit(EXIT_FAILURE);
     }
 
-
     int r;
-    unsigned char *temp;
     if (FD_ISSET(tun_fd, &readset)) {
-//      printf("In FD_ISSET");
       r = read(tun_fd, tun_buf, LENBUF);
       
       if (r < 0) {
@@ -142,16 +137,17 @@ int main(){
         perror("read from tun_fd error");
         break;
       }
-      temp = malloc((size_t)r);
-      strncpy(temp,tun_buf,(size_t)r);
-      printf("There are %d bytes in the packets\n", r);
-      fwrite(temp,sizeof(temp),1,write_ptr);  
+      printf("There are %d bytes in the packets\n", r);  
+      fwrite(tun_buf,r,1,write_ptr);
+      fseek(write_ptr, 0L, SEEK_END);  
+      long int length = ftell(write_ptr); 
+      printf("Length of file is: %ld", length); 
     }
     else{
       printf("If fails");
     }
-    free(temp);
-    
+//    free(temp);
+    fclose(write_ptr);
   }
 }
 
