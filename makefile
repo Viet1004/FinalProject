@@ -1,6 +1,11 @@
-all: IPoverTwitter
+libs = -ljansson
 
-IPoverTwitter: IPoverTwitter.o
-	cc -g -o IPoverTwitter IPoverTwitter.o
-IPoverTwitter.o: IPoverTwitter.c
-	cc -c -Wall -g IPoverTwitter.c
+all: mkjson
+
+mkjson: mkjson.o
+	cc -g -o mkjson mkjson.o -ljansson
+mkjson.o: mkjson.c
+	cc -c -Wall -g mkjson.c -g
+	
+clean:
+	rm mkjson mkjson.o
