@@ -112,9 +112,9 @@ int main(){
 
 //  write_ptr = fopen("test.bin","wb");
 /*  
-  run("sudo openvpn --mktun --dev tun5");
-  run("sudo ip link set tun5 up");
-  run("sudo ip addr add 10.0.0.1/24 dev tun5");
+  run("sudo openvpn --mktun --dev tun1");
+  run("sudo ip link set tun1 up");
+  run("sudo ip addr add 10.0.0.1/24 dev tun1");
 */
   while(1){
     FILE *write_ptr;
@@ -138,6 +138,20 @@ int main(){
         break;
       }
       printf("There are %d bytes in the packets\n", r);  
+      int *temp = malloc(2*r*sizeof(int));      
+      for(int i = 0; i<r; i++){
+        (*(temp+2*i)) = (int)(*(tun_buf+i))/16; 
+        (*(temp+2*i+1)) = (int)(*(tun_buf+i))%16;
+
+      }
+      for(int i = 0; i<r; i++){
+        printf("%d ", *(temp+2*i));
+        printf("%d ", *(temp+2*i+1));
+        if (i == r-1){
+          printf("\n");
+        } 
+      }
+      free(temp);
       fwrite(tun_buf,r,1,write_ptr);
       fseek(write_ptr, 0L, SEEK_END);  
       long int length = ftell(write_ptr); 
