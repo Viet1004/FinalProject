@@ -1,10 +1,10 @@
 First type these lines
 
-openvpn --mktun --dev tun2
+openvpn --mktun --dev tun1
 
-ip link set tun2 up
+ip link set tun1 up
 
-ip addr add 10.0.0.1/24 dev tun2
+ip addr add 10.0.0.1/24 dev tun1
 
 Then open another terminal and type this line 
 
