@@ -6,7 +6,7 @@
 typedef struct next
 {
 	//the array of size 64 of words
-	char* nextWords[64];
+	char nextWords[64][40];
 	
 } next ;
 
