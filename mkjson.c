@@ -33,15 +33,13 @@ int main(int argc, char * argv[]){
 	}
 	//memcpy((pointersToInf[0]->nextWords),"highvideo",strlen("highvideo"));
 	
-				printf("can we see here");
 
 	FILE * fp = fopen("text2.txt", "r"); 
 	if (fp == NULL) return 1; 
 	char c; 
 	int count = 0,countext = 0;
 	char str1[40],str2[40];
-	strcpy(str1,"hiiiii");
-		printf("can we see here");
+
 
 	int pointersize = 0;
 	while((c = fgetc(fp)) != EOF  && countext < 2000) //getting characters
@@ -57,10 +55,9 @@ int main(int argc, char * argv[]){
 			while(i < 2000 && i<pointersize && strcmp(str1,words[i])!=0){
 				i++;
 			}		
-			printf("%d and %d and %d\n",i,pointersize,pointersToInf[i].size);
-			printf("we come here and %d",pointersize);
+			
 			if(i!=2000 && i!=pointersize){
-								printf("we come here");
+						
 
 				//first we check if we have enough space in the library of str1.
 				if(pointersToInf[i].size < 64){
@@ -70,14 +67,12 @@ int main(int argc, char * argv[]){
 					memcpy((pointersToInf[i].nextWords)[size],str2,strlen(str2));
 				}
 			}else{//pointersize is the number of elements we have analyzed, without repetation
-				printf("we come here");
 				memcpy(words[pointersize],str1,strlen(str1));
 				int size = pointersToInf[i].size;
 				pointersToInf[i].size  = size + 1;
 				memcpy((pointersToInf[pointersize].nextWords)[size],str2,strlen(str2));
 				pointersize++;
 			}
-							printf("we come here");
 
 			strcpy(str1,str2);// two consecutive words being like : str1 str2
 			memset(str2,0,sizeof(str2));
@@ -89,10 +84,8 @@ int main(int argc, char * argv[]){
 			strncat(str2, &c, 1);
 			count++;//to have the length of the word
 		} 
-			printf("can we see here??");
 	} 
 	fclose(fp); 
-	printf("can we see here??");
 	
 	//now we have the library but maybe not all the words have a complete array : nextWords.
 	//to complete these arrays we use the function "complete" to fix this.
@@ -134,7 +127,6 @@ void complete(char words[2000][40],inf* pointersToInf,int countext){
 	}
 	
 	
-	printf("can we see here");
 
 }
 
