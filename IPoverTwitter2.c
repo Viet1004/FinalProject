@@ -101,9 +101,7 @@ int main(){
   tv.tv_sec = 1;
   tv.tv_usec = 10;
 */
-FILE *write_ptr;
-write_ptr = fopen("test.bin", "wb");
-  uint8_t tun_buf[LENBUF];
+  unsigned char tun_buf[LENBUF];
 //  unsigned char buff[LENBUF];
   bzero(tun_buf,LENBUF);
   int tun_fd;
@@ -118,11 +116,8 @@ write_ptr = fopen("test.bin", "wb");
   run("sudo ip link set tun1 up");
   run("sudo ip addr add 10.0.0.1/24 dev tun1");
 */
-int i = 0;
   while(1){
-    i++;
-    if(i==5) break;
-//    FILE *write_ptr;
+    FILE *write_ptr;
     write_ptr = fopen("test.bin","wb");
     fd_set readset;
     FD_ZERO(&readset);
@@ -142,7 +137,7 @@ int i = 0;
         perror("read from tun_fd error");
         break;
       }
-      printf("There are %d bytes in the packet\n", r);  
+      printf("There are %d bytes in the packets\n", r);  
       int *temp = malloc(2*r*sizeof(int));      
       for(int i = 0; i<r; i++){
         (*(temp+2*i)) = (int)(*(tun_buf+i))/16; 
@@ -157,9 +152,10 @@ int i = 0;
         } 
       }
       free(temp);
-      int a = fwrite(tun_buf,1,r,write_ptr);
-      printf("Have written %d bytes into the file\n", a);
-      run("python3 postTweet.py");  
+      fwrite(tun_buf,r,1,write_ptr);
+      fseek(write_ptr, 0L, SEEK_END);  
+      long int length = ftell(write_ptr); 
+      printf("Length of file is: %ld", length); 
     }
     else{
       printf("If fails");
@@ -172,9 +168,4 @@ int i = 0;
 /*
 Reference:  https://backreference.org/2010/03/26/tuntap-interface-tutorial/
             https://lxd.me/a-simple-vpn-tunnel-with-tun-device-demo-and-some-basic-concepts
-*/
-          /*
-      fseek(write_ptr, 0L, SEEK_END);  
-      long int length = ftell(write_ptr); 
-      printf("Length of file is: %ld", length); 
 */

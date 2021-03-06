@@ -13,7 +13,7 @@
 #include <signal.h>
 #include <linux/if.h>
 #include <linux/if_tun.h>
-
+#define LENBUF 1024
 int tun_allocAlt() {
   struct ifreq ifr;
   int fd, e;
@@ -38,21 +38,34 @@ int tun_allocAlt() {
 
 int main(){
     FILE *rptr;
-    uint8_t buff[84];
-    bzero(buff,84);
+    uint8_t buff[LENBUF];
+    bzero(buff,LENBUF);
     fd_set writefd;
     int tun_fd;
     if ((tun_fd = tun_allocAlt())<0){
       perror("Error at tun allocation");
       exit(EXIT_FAILURE);
     }
+// New code
+    FILE *rptr2;
+    rptr2 = fopen("test.bin", "rb");
+
+//    fwrite(tun_buf,1,r,write_ptr);
+    fseek(rptr2, 0L, SEEK_END);  
+    size_t length = ftell(rptr2);
+    fclose(rptr2);
+//    unsigned char *buff = malloc((size_t)length);
+//    printf("Length: %ld\n", length);
+
+// End of new code
+
 
     rptr = fopen("test.bin", "rb");
     
     if(rptr == NULL){
         perror("Opening file error");
     }
-    int a = fread(buff, 1, sizeof(buff), rptr);
+    int a = fread(buff, 1, length, rptr);
     printf("%d\n", a);
 
     FD_ZERO(&writefd);
@@ -62,7 +75,7 @@ int main(){
     }
 
     if(FD_ISSET(tun_fd, &writefd)){
-      int r = write(tun_fd, buff, sizeof(buff));
+      int r = write(tun_fd, buff, length);
       if (r < 0){
         perror("write to file descriptor error");
       }
@@ -74,7 +87,7 @@ int main(){
 //    printf("Length: %ld\n", length);
 
 
-    for(int i = 0; i<84; i++){
+    for(int i = 0; i<length; i++){
         printf("%u ", *(buff+i));  
     }
     
