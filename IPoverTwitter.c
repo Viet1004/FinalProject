@@ -13,6 +13,7 @@
 #include <signal.h>
 #include <linux/if.h>
 #include <linux/if_tun.h>
+
 #define LENBUF 1024
 
 static void run(char *cmd) {
@@ -101,8 +102,8 @@ int main(){
   tv.tv_sec = 1;
   tv.tv_usec = 10;
 */
-FILE *write_ptr;
-write_ptr = fopen("test.bin", "wb");
+  FILE *write_ptr;
+//  write_ptr = fopen("test.bin", "w");
   uint8_t tun_buf[LENBUF];
 //  unsigned char buff[LENBUF];
   bzero(tun_buf,LENBUF);
@@ -123,7 +124,7 @@ int i = 0;
     i++;
     if(i==5) break;
 //    FILE *write_ptr;
-    write_ptr = fopen("test.bin","wb");
+    write_ptr = fopen("readToTwitter1.txt","w");
     fd_set readset;
     FD_ZERO(&readset);
     FD_SET(tun_fd, &readset);
@@ -147,7 +148,6 @@ int i = 0;
       for(int i = 0; i<r; i++){
         (*(temp+2*i)) = (int)(*(tun_buf+i))/16; 
         (*(temp+2*i+1)) = (int)(*(tun_buf+i))%16;
-
       }
       for(int i = 0; i<r; i++){
         printf("%d ", *(temp+2*i));
@@ -156,16 +156,27 @@ int i = 0;
           printf("\n");
         } 
       }
+/*      int count = fwrite(temp, 2*r*sizeof(int), 1, write_ptr);
+      if(count == 0){
+        perror("write to file error\n");
+      }
+*/    for(int i = 0; i<r; i++){
+        if (*(temp+i) < 8){
+          fputs("c",write_ptr);
+        }
+        else fputs("a",write_ptr);
+      }
+      fclose(write_ptr);
       free(temp);
-      int a = fwrite(tun_buf,1,r,write_ptr);
-      printf("Have written %d bytes into the file\n", a);
+//      int a = fwrite(tun_buf,1,r,write_ptr);
+//      printf("Have written %d bytes into the file\n", a);
       run("python3 postTweet.py");  
     }
     else{
       printf("If fails");
     }
 //    free(temp);
-    fclose(write_ptr);
+
   }
 }
 
