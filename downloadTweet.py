@@ -9,6 +9,9 @@ consumer_secret = ''
 access_token = ''
 access_token_secret = ''
 
+search_word = "#klmdcatadbac"
+#search_word = "So"
+
 def OAuth():
 	try:
 		auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -19,6 +22,10 @@ def OAuth():
 
 oauth = OAuth()
 api = tweepy.API(oauth)
-with open("message.txt","r") as file:
-	text = file.read()
-api.update_status(text)
+
+tweets = tweepy.Cursor(api.search, q = search_word, lang = "en").items()
+
+with open("TweetDownload.txt", "w") as filetxt:
+	for tweet in tweets:
+		filetxt.write(tweet.text)
+

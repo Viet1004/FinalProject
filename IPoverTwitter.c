@@ -13,6 +13,9 @@
 #include <signal.h>
 #include <linux/if.h>
 #include <linux/if_tun.h>
+#include <jansson.h>
+#include "encode.h"
+#include "decode.h"
 
 #define LENBUF 1024
 
@@ -102,6 +105,12 @@ int main(){
   tv.tv_sec = 1;
   tv.tv_usec = 10;
 */
+//
+  size_t size = 2000;
+  char words[size][40];
+  next pointersToNext[size];
+  size = readfromjson(size, words, pointersToNext);
+//
   FILE *write_ptr;
 //  write_ptr = fopen("test.bin", "w");
   uint8_t tun_buf[LENBUF];
@@ -119,10 +128,10 @@ int main(){
   run("sudo ip link set tun1 up");
   run("sudo ip addr add 10.0.0.1/24 dev tun1");
 */
-int i = 0;
+int counter = 0;
   while(1){
-    i++;
-    if(i==5) break;
+    counter++;
+    if(counter==100) break;
 //    FILE *write_ptr;
     write_ptr = fopen("readToTwitter1.txt","w");
     fd_set readset;
@@ -160,17 +169,29 @@ int i = 0;
       if(count == 0){
         perror("write to file error\n");
       }
-*/    for(int i = 0; i<r; i++){
+*/   
+/* 
+      for(int i = 0; i<r; i++){
         if (*(temp+i) < 8){
           fputs("c",write_ptr);
         }
         else fputs("a",write_ptr);
       }
+      
+*/    
+      int numIter = 2*r/20;
+      int res = 2*r%20;
+      for (int i = 0; i < numIter; i++){
+          writencode(size,words,pointersToNext,i,counter+100,20, temp+i*20);
+          run("python3 postTweet.py");  
+      }
+      writencode(size, words, pointersToNext, numIter,counter+100, res, temp+numIter*20);
+      run("python3 postTweet.py");
       fclose(write_ptr);
       free(temp);
 //      int a = fwrite(tun_buf,1,r,write_ptr);
 //      printf("Have written %d bytes into the file\n", a);
-      run("python3 postTweet.py");  
+//      run("python3 postTweet.py");  
     }
     else{
       printf("If fails");
