@@ -16,9 +16,15 @@
 //what we write in another text file is an array of 4-bit binary numbers
 //!! it would be safer to have just one text file open at a time because it is platform dependant
 
+<<<<<<< HEAD
+/*int main(int argc, char * argv[]){
+		
+	json_t *json;
+=======
 int main(int argc, char * argv[]){
 		
 	/*json_t *json;
+>>>>>>> upstream/main
     json_error_t error;
 	size_t size = 2000;
 	char words[size][40];
@@ -45,14 +51,22 @@ int main(int argc, char * argv[]){
 				//(pointersToNext[i].nextWords)[index] = str;
 			}
 		}
+<<<<<<< HEAD
+	}
+=======
 	}*/
+>>>>>>> upstream/main
 	
 	//now we have all the information in the two arrays words and pointersToNext, we encode 4-bit binary numbers
 	//suppose we have the number of these numbers
     
 	
 	return 0;
+<<<<<<< HEAD
+}*/
+=======
 }
+>>>>>>> upstream/main
 
 int readfromjson(size_t size,char words[size][40],next pointersToNext[size]){
 	json_t *json;
@@ -97,7 +111,11 @@ char* decodetxt(size_t size,char words[size][40],next pointersToNext[size]){
 	{ 
 		if(c == ' ' || c == '\n') //this is the end of the word
 		{ 
+<<<<<<< HEAD
+			//printf("\n");
+=======
 			printf("\n");
+>>>>>>> upstream/main
 			memcpy(message[countext],str1,strlen(str1));
 			free(str1);
 			str1 = (char*)malloc(40*sizeof(char));
@@ -106,7 +124,11 @@ char* decodetxt(size_t size,char words[size][40],next pointersToNext[size]){
 		} 
 		else 
 		{ 
+<<<<<<< HEAD
+			//printf("%c",c);
+=======
 			printf("%c",c);
+>>>>>>> upstream/main
 			strncat(str1, &c, 1);
 			count++;//to have the length of the word
 		} 
@@ -124,6 +146,31 @@ char* decodetxt(size_t size,char words[size][40],next pointersToNext[size]){
 	}*/
 	int numPacket = -1;
 	int order;
+<<<<<<< HEAD
+	int counter = 0;//to save just what is needed
+	bool start = true;//if we are at the beggining of a message this variable is true.
+	bool decodeEnable = false;//this variable is true if we are in the right packet and we decode this packet.
+	char* decodedPacket = (char*)malloc(sizeof("a"));//this is what we return
+	memcpy(decodedPacket,"a",sizeof("a"));
+	char* lastword;//last word that we have read from the encoded file
+	int arrayofints[countext];//to keep the decoded integers
+	int decodeLength = 0;//to know how many inetegers we have decoded
+	for(int i = 0;i < countext;i++){
+		if(strchr(message[i],'/') == NULL){
+			if(decodeEnable){//if we are in the right packet to decode
+				if(start){//being at the beggining of a message => we search in the array words
+					int j = 0;
+					while(j < size && strcmp(message[i],words[j])!=0){
+						j++;
+					}
+					lastword = (char*)malloc(strlen(words[j])*sizeof(char));
+					memcpy(lastword,words[j],strlen(words[j]));
+					//now we know that this j is actually the value of the binary number
+					arrayofints[counter] = j;
+					decodeLength++;
+					//printf("the real one %d \n" , j);
+					start = false;//we are no more at the beggining of a message
+=======
 	bool start = true;//if we are at the beggining of a message this variable is true.
 	bool decodeEnable = true;//this variable is true if we are in the right packet and we decode this packet.
 	char* decodedPacket = (char*)malloc(strlen("\0"));//this is what we return
@@ -145,30 +192,47 @@ char* decodetxt(size_t size,char words[size][40],next pointersToNext[size]){
 					decodeLength++;
 					//printf("the real one %d \n" , j);
 					start = false;
+>>>>>>> upstream/main
 				}else{
 					//here we have two cases : 1.the last word is actually in the list
 					//the last word was not on the list
 					//in the first case we look at its next words array
 					//in the second case we look at the array words
+<<<<<<< HEAD
+=======
 					
+>>>>>>> upstream/main
 					int j = 0;
 					while(j < size && strcmp(lastword,words[j])!=0){//size is the size of the library
 						j++;
 					}
 					
+<<<<<<< HEAD
+					if(j == size){//it means that we have not found the last word in the words and hence :
+=======
 					if(j == size){
 						//it means that we have not found the last word in the words and hence :
+>>>>>>> upstream/main
 						int k = 0;
 						while(k < size && strcmp(message[i],words[k])!=0){//size is the size of the library
 							k++;
 						}
 						free(lastword);
+<<<<<<< HEAD
+						lastword = (char*)malloc(strlen(words[k])*sizeof(char));
+						memcpy(lastword,words[k],strlen(words[k]));
+						arrayofints[counter] = k;
+						decodeLength++;
+						//printf("real one : %d \n" , k);
+					}else{//the last word is actually in the words array
+=======
 						lastword = (char*)malloc(40*sizeof(char));
 						memcpy(lastword,words[k],strlen(words[k]));
 						arrayofints[i] = k;
 						decodeLength++;
 						//printf("real one : %d \n" , k);
 					}else{
+>>>>>>> upstream/main
 						//printf("lastword is %s message[i] is %s words[j] is %s\n", lastword, message[i],words[j]);
 						//we need to look the list of its nextwords
 						int k = 0;
@@ -176,13 +240,30 @@ char* decodetxt(size_t size,char words[size][40],next pointersToNext[size]){
 							k++;
 						}
 						free(lastword);
+<<<<<<< HEAD
+						lastword = (char*)malloc(strlen(message[i])*sizeof(char));
+						memcpy(lastword,message[i],strlen(message[i]));
+						arrayofints[counter] = k;
+=======
 						lastword = (char*)malloc(40*sizeof(char));
 						memcpy(lastword,message[i],strlen(message[i]));
 						arrayofints[i] = k;
+>>>>>>> upstream/main
 						decodeLength++;
 						//printf("the message : %s  nextwords : %s  real one %d \n" ,message[i] ,(pointersToNext[j].nextWords)[k],k);
 					}
 				}
+<<<<<<< HEAD
+				
+				/*char str[12];
+				sprintf(str, "%d", arrayofints[counter]);
+				decodedPacket = (char*) realloc(decodedPacket,strlen(decodedPacket)+13);
+				strcat(decodedPacket,str);*/
+				counter++;
+			}
+		}else{
+			if(numPacket == -1){//the very first packet we read
+=======
 				char str[12];
 				sprintf(str, "%d", arrayofints[i]);
 				decodedPacket = (char*) realloc(decodedPacket,strlen(decodedPacket)+13);
@@ -190,11 +271,16 @@ char* decodetxt(size_t size,char words[size][40],next pointersToNext[size]){
 			}
 		}else{
 			if(numPacket == -1){
+>>>>>>> upstream/main
 				char* slash = strchr(message[i],'/');// slash points to the slash position. numPacket/order
 				*(slash) = '\0';
 				slash = slash+1;
 				order = atoi(slash);
 				numPacket = atoi(message[i]);
+<<<<<<< HEAD
+				decodeEnable = true;
+=======
+>>>>>>> upstream/main
 			}else{
 				char* slash = strchr(message[i],'/');// slash points to the slash position. numPacket/order
 				*(slash) = '\0';
@@ -216,9 +302,21 @@ char* decodetxt(size_t size,char words[size][40],next pointersToNext[size]){
 		}
 	}
 
+<<<<<<< HEAD
+	/*for(int i = 0;i < decodeLength;i++){
+		
+		printf("%d \n",arrayofints[i]);
+	}*/
+	for(int i = 0;i < decodeLength/2;i++){
+		char str[12];
+		sprintf(str, "%d", arrayofints[2*i]*16+arrayofints[2*i+1]);
+		decodedPacket = (char*) realloc(decodedPacket,strlen(decodedPacket)+13);
+		strcat(decodedPacket,str);
+=======
 	for(int i = 0;i < countext;i++){
 		
 		printf("%d \n",arrayofints[i]);
+>>>>>>> upstream/main
 	}
 	
 	FILE *fptr;
@@ -227,6 +325,10 @@ char* decodetxt(size_t size,char words[size][40],next pointersToNext[size]){
         printf("Error!");
         exit(1);
     }
+<<<<<<< HEAD
+	printf("\n");
+=======
+>>>>>>> upstream/main
 	
 	for(int i = 0; i < decodeLength; i++){
 		/*int value = arrayoffourbits[i];
@@ -247,8 +349,18 @@ char* decodetxt(size_t size,char words[size][40],next pointersToNext[size]){
 		fprintf(fptr, "%s", str);
 		fprintf(fptr, "%s", " ");
 		printf("  %s   ", str);
+<<<<<<< HEAD
+		//printf("\n");
+	}
+	printf("\n");
+	printf("%s \n",decodedPacket+1);
+	//printf("%s \n",decodedPacket);
+	return (decodedPacket+1);
+}
+=======
 		printf("\n");
 	}
 	
 	return decodedPacket;
 }
+>>>>>>> upstream/main
