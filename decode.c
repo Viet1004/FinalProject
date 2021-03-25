@@ -264,3 +264,4 @@ char* decodetxt(size_t size,char words[size][40],next pointersToNext[size]){
 	//printf("%s \n",decodedPacket);
 	return (decodedPacket+1);
 }
+

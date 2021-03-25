@@ -23,6 +23,7 @@ runnerencode.o: runnerencode.c encode.h encode.c
 	cc -c -Wall -g runnerencode.c
 	cc -c -Wall -g encode.h 
 	cc -c -Wall -g encode.c
+
 clean:
 	rm runner runner.o decode.o
 	rm runnerencode runnerencode.o encode.o
