@@ -31,6 +31,7 @@ int main(){
 int toBinary(char *c, unsigned int size){
     FILE *fptr = fopen("test.bin", "wb");
     fwrite(c, size, 1, fptr);
-    return 0;
     fclose(fptr);
+    return 0;
+
 }

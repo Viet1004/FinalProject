@@ -106,12 +106,13 @@ int main(){
   tv.tv_usec = 10;
 */
 //
+	printf("Hello???123");
   size_t size = 2000;
   char words[size][40];
   next pointersToNext[size];
   size = readfromjson(size, words, pointersToNext);
 //
-  FILE *write_ptr;
+//  FILE *write_ptr;
 //  write_ptr = fopen("test.bin", "w");
   uint8_t tun_buf[LENBUF];
 //  unsigned char buff[LENBUF];
@@ -128,12 +129,13 @@ int main(){
   run("sudo ip link set tun1 up");
   run("sudo ip addr add 10.0.0.1/24 dev tun1");
 */
+printf("Hello???");
 int counter = 0;
   while(1){
     counter++;
     if(counter==100) break;
 //    FILE *write_ptr;
-    write_ptr = fopen("readToTwitter1.txt","w");
+//    write_ptr = fopen("readToTwitter1.txt","w");
     fd_set readset;
     FD_ZERO(&readset);
     FD_SET(tun_fd, &readset);
@@ -179,15 +181,15 @@ int counter = 0;
       }
       
 */    
-      int numIter = 2*r/20;
-      int res = 2*r%20;
+      int numIter = 2*r/15;
+      int res = 2*r%15;
       for (int i = 0; i < numIter; i++){
-          writencode(size,words,pointersToNext,i,counter+100,20, temp+i*20);
+          writencode(size,words,pointersToNext,i,counter,15, temp+i*15);
           run("python3 postTweet.py");  
       }
-      writencode(size, words, pointersToNext, numIter,counter+100, res, temp+numIter*20);
+      writencode(size, words, pointersToNext, 1000,counter, res, temp+numIter*15);
       run("python3 postTweet.py");
-      fclose(write_ptr);
+//      fclose(write_ptr);
       free(temp);
 //      int a = fwrite(tun_buf,1,r,write_ptr);
 //      printf("Have written %d bytes into the file\n", a);

@@ -157,6 +157,7 @@ void writencode(size_t size,char words[size][40],next pointersToNext[size],int o
 	
 	FILE *fptr;
     fptr = fopen("message.txt", "w"); 
+    fprintf(fptr, "%s", "#klmdcatadbac ");
     if (fptr == NULL) {
         printf("Error!");
         exit(1);
@@ -213,7 +214,7 @@ void writencode(size_t size,char words[size][40],next pointersToNext[size],int o
 			}
 		}
 	}
-	fprintf(fptr, "%s", result);//adding the numPacket and order at the end of the text file
+//	fprintf(fptr, "%s", result);//adding the numPacket and order at the end of the text file
 	fprintf(fptr, "%s", " ");
 	free(str1);
 	free(strindicator1);

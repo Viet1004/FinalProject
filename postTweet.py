@@ -4,10 +4,10 @@ sys.path.append('/home/viet1004/.local/lib/python3.8/site-packages')
 import tweepy
 
 
-consumer_key = ''
-consumer_secret = ''
-access_token = ''
-access_token_secret = ''
+consumer_key = 'jRy6vDD8Ro20e6eoKznUZWyhl'
+consumer_secret = 'hdROeu1S8OfrCHWNj9iHAjX12tRI6ZxfoYIRYz3gDBpBGj1SSQ'
+access_token = '1364598542401220609-IrDcUpPoiw9sbRwIjx0USTIx7cMSPx'
+access_token_secret = 'XPyJqrmbyY2uK00Ch5c1YxLjSJA2YvR3vHck7wmoZuGz1'
 
 def OAuth():
 	try:
